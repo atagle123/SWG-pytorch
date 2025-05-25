@@ -1,0 +1,77 @@
+defaults:
+  - _self_
+  - datasets: 
+  - method: 
+
+serial_number: "paper" # additional identification for experiment
+exp_id: "N_${actor.diffusion.n_timesteps}_${actor.diffusion.schedule}_${critic.training.objective}_${serial_number}"
+seed: 1264 # this changes
+
+
+wandb:
+  wandb_dataset: ${datasets.env}_${datasets.policy}
+  wandb_exp_name: ${datasets.env}_${datasets.policy}_${exp_id}_${seed}
+
+hydra:
+  run:
+    dir: ./logs/${method.name}/pretrained/${datasets.dataset_entry}/${exp_id}/${seed}
+
+
+dataset:
+  env_entry: ${datasets.env_entry}
+  clip_actions_to_eps: True
+
+actor:
+  actor_savepath:  ./logs/${method.name}/pretrained/${datasets.dataset_entry}/${exp_id}/${seed}/models/actor
+
+  diffusion_model:
+    time_emb: 128
+    hidden_dim: 256
+    num_blocks: 3
+    use_layer_norm: True
+    dropout_rate: ${datasets.dropout_rate}
+
+  diffusion:
+    schedule: "vp"
+    n_timesteps: 15
+
+  training:
+    steps: 2000000
+    ema_decay: 0.995
+    train_batch_size: 1024
+    train_lr: 3e-4
+    step_start_ema: 100000
+    update_ema_every: 10
+    weight_decay:  0.0001
+    eta_min: 1e-5
+
+  weight_build:
+    weights_function: "expectile" # param refering to the function used to build the weights
+    norm: False
+
+
+critic:
+  critic_savepath:  ./logs/${method.name}/pretrained/${datasets.dataset_entry}/${exp_id}/${seed}/models/critic
+
+  q_model:
+    hidden_dim: 256
+    n_hidden: 2
+
+  value_model:
+    hidden_dim: 256
+    n_hidden: 2
+    use_layer_norm: True
+
+  training:
+    steps: 1000000
+    q_batch_size: 256
+    q_lr: 3e-4
+    target_update: 0.005
+    discount: 0.99
+    critic_hyperparam: ${datasets.critic_hyperparam}
+    objective : "expectile"
+
+log_params:
+  save_freq: 100000
+  log_freq: 10000
+  wandb_log: False
