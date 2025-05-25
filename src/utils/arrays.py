@@ -1,31 +1,50 @@
 import numpy as np
 import torch
-from .setup import DEVICE
 
 DTYPE = torch.float
-
-
-def atleast_2d(x):
-    while x.ndim < 2:
-        x = np.expand_dims(x, axis=-1)
-    return x
-
+DEVICE = "cuda:0"
 
 # -----------------------------------------------------------------------------#
 # ------------------------------ numpy <--> torch -----------------------------#
 # -----------------------------------------------------------------------------#
 
 
-def to_device(x):
+def to_np(x):
+    if torch.is_tensor(x):
+        x = x.detach().cpu().numpy()
+    elif type(x) is dict:
+        return {k: to_np(v) for k, v in x.items()}
+    return x
+
+
+def to_torch(x, dtype=None, device=None):
+    dtype = dtype or DTYPE
+    device = device or DEVICE
+    if type(x) is dict:
+        return {k: to_torch(v, dtype, device) for k, v in x.items()}
+    elif torch.is_tensor(x):
+        return x.to(device).type(dtype)
+    return torch.tensor(x, dtype=dtype, device=device)
+
+
+def to_device(x, device=DEVICE, dtype=torch.float):
     if torch.is_tensor(x):
         x = x.float()
-        return x.to(DEVICE, non_blocking=True)
+        return x.to(device)
+    elif type(x) is dict:
+        return {k: to_device(v.float(), device) for k, v in x.items()}
     else:
         raise RuntimeError(f"Unrecognized type in `to_device`: {type(x)}")
 
 
-def batch_to_device(batch):
-    vals = [to_device(getattr(batch, field)) for field in batch._fields]
+def set_device(device):
+    DEVICE = device
+    if "cuda" in device:
+        torch.set_default_tensor_type(torch.cuda.FloatTensor)
+
+
+def batch_to_device(batch, device="cuda:0"):
+    vals = [to_device(getattr(batch, field), device) for field in batch._fields]
     return type(batch)(*vals)
 
 
@@ -53,6 +72,7 @@ def report_parameters(model, topk=10):
 
     modules = dict(model.named_modules())
     sorted_keys = sorted(counts, key=lambda x: -counts[x])
+    max_length = max([len(k) for k in sorted_keys])
     for i in range(topk):
         key = sorted_keys[i]
         count = counts[key]
@@ -65,3 +85,9 @@ def report_parameters(model, topk=10):
         f"... and {len(counts)-topk} others accounting for {_to_str(remaining_parameters)} parameters",
     )
     return n_parameters
+
+
+def atleast_2d(x):
+    while x.ndim < 2:
+        x = np.expand_dims(x, axis=-1)
+    return x

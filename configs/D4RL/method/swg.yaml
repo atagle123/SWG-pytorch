@@ -1,3 +1,0 @@
-agent: 
- _target_: src.agent.swg_agent.SelfWeightedAgent
-name: swg

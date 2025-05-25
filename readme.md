@@ -1,6 +1,6 @@
 # Self Weighted Guidance Repository
 
-Welcome to the Self Weighted Guidance repository in PyTorch. 
+Welcome to the Self Weighted Guidance repository for toy examples in PyTorch. 
 
 
 ## Installation
@@ -19,7 +19,7 @@ cd swg-pt
 
 ```bash
 conda env create -f environment.yml
-conda activate swg_pytorch
+conda activate swg_pytorch_toy
 conda develop .
 ```
 

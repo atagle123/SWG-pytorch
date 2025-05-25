@@ -1,0 +1,45 @@
+defaults:
+  - _self_
+  - datasets: 
+
+seed: 123 
+
+dataset_group: "toy"
+logpath: ${dataset_group}/${datasets.dataset_name}
+
+wandb:
+  wandb_exp_name: ${dataset_group}_${datasets.dataset_name}
+
+hydra:
+  run:
+    dir: ./logs/pretrained/${logpath}
+
+diffusion_results: ./logs/pretrained/${logpath}/diffusion
+
+dataset:
+  dataset_size: 1000000
+  dataset_name: ${datasets.dataset_name}
+
+model: 
+  data_dim: 3
+  time_emb: 32
+  hidden_dim: 512
+  num_layers: 6
+
+diffusion:
+  n_timesteps: 100
+  energy_weight: 2
+  data_dim: ${model.data_dim}
+  batch_size: 1024
+
+training: 
+  n_train_steps: 200000
+  batch_size: ${diffusion.batch_size}
+  learning_rate: 1e-4
+  gradient_accumulate_every: 2
+  ema_decay: 0.995
+  results_dir: ${diffusion_results}
+
+log_params: 
+  save_freq: 20000
+  log_freq: 10000
