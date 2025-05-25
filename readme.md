@@ -11,7 +11,7 @@ We recommend using [Miniconda] to manage dependencies.
 ### 1. Clone the Repository
 
 ```bash
-git clone 
+git clone https://github.com/atagle123/SWG-pytorch
 cd swg-pt
 ```
 
@@ -28,7 +28,7 @@ conda develop .
 To modify the main hyperparameters for experiments, edit the following file:
 
 ```bash
-configs/toy/config.yaml
+configs/D4RL/config.yaml
 ```
 
 ## Training
@@ -36,13 +36,13 @@ configs/toy/config.yaml
 Change dataset_name with the dataset to train
 
 ```bash
-python scripts/train.py datasets={dataset_name}
+python scripts/train.py method=swg datasets={dataset_name} sseed={your_seed}
 ```
 
 ## Evaluating
 
-Get the plots for the main paper 
+Evaluate models
 
 ```bash
-python scripts/get_diffusion_plots.py
+python scripts/evaluate.py
 ```
