@@ -2,6 +2,7 @@ import os
 import hydra
 import logging
 from src.utils.setup import set_seed, DEVICE
+from src.agent.swg_agent import SelfWeightedAgent
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

@@ -11,7 +11,6 @@ from src.models.diffusion_net import ScoreModel
 from src.utils.training import cycle, EMA
 from src.utils.arrays import batch_to_device, report_parameters
 from src.utils.setup import DEVICE
-from src.utils.timer import Timer
 
 
 class Actor:

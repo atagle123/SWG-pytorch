@@ -49,7 +49,7 @@ def param_to_module(param):
 def report_parameters(model, topk=10):
     counts = {k: p.numel() for k, p in model.named_parameters()}
     n_parameters = sum(counts.values())
-    print(f"[ utils/arrays ] Total parameters: {_to_str(n_parameters)} {n_parameters}")
+    print(f"[ utils/arrays ] Total parameters: {_to_str(n_parameters)}")
 
     modules = dict(model.named_modules())
     sorted_keys = sorted(counts, key=lambda x: -counts[x])

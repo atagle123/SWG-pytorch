@@ -6,14 +6,17 @@ from einops import rearrange
 import numpy as np
 from typing import Sequence, Callable, Optional
 
+def extract(a, t, x_shape):
+    b, *_ = t.shape
+    out = a.gather(-1, t)
+    return out.reshape(b, *((1,) * (len(x_shape) - 1)))
+
+def divisible_by(numer, denom):
+    return (numer % denom) == 0
 
 # -----------------------------------------------------------------------------#
 # ----------------------------- time embeddings -------------------------------#
 # -----------------------------------------------------------------------------#
-
-
-def divisible_by(numer, denom):
-    return (numer % denom) == 0
 
 
 class RandomOrLearnedSinusoidalPosEmb(nn.Module):
