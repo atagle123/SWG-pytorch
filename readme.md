@@ -5,7 +5,7 @@ Welcome to the Self Weighted Guidance repository in PyTorch.
 
 ## Installation
 
-We recommend using [Miniconda] to manage dependencies.
+We recommend using [Miniconda](https://docs.conda.io/en/latest/miniconda.html) to manage dependencies.
 
 
 ### 1. Clone the Repository
