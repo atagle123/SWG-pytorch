@@ -11,7 +11,7 @@ We recommend using [Miniconda] to manage dependencies.
 ### 1. Clone the Repository
 
 ```bash
-git clone 
+git clone https://github.com/atagle123/SWG-pytorch
 cd swg-pt
 ```
 
