@@ -1,3 +1,0 @@
-agent: 
- _target_: src.agent.agent.ExternalWeightedAgent
-name: ext_guidance

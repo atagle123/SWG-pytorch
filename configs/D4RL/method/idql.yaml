@@ -1,3 +1,0 @@
-agent: 
- _target_: src.agent.idql.IDQL_Agent
-name: idql
